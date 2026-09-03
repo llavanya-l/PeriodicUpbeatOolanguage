@@ -86,9 +86,23 @@ router.post("/applications", requireAuth, async (req, res): Promise<void> => {
   const [application] = await db
     .insert(applicationsTable)
     .values({
-      ...parsed.data,
-      clerkUserId: authUser.id,
+      applicantName: parsed.data.applicantName,
       email: authUser.email,
+      phone: parsed.data.phone,
+      age: parsed.data.age,
+      cityDistrict: parsed.data.cityDistrict,
+      state: parsed.data.state,
+      program: parsed.data.program,
+      region: `${parsed.data.cityDistrict}, ${parsed.data.state}`,
+      annualIncome: null,
+      householdSize: 1,
+      employmentStatus: parsed.data.employmentStatus,
+      hasDisability: false,
+      requestedSupport: parsed.data.program,
+      reasonForApplying: parsed.data.reasonForApplying ?? null,
+      additionalInformation: parsed.data.additionalInformation ?? null,
+      notes: parsed.data.additionalInformation ?? null,
+      clerkUserId: authUser.id,
       ...eligibility,
       status: "pending",
     })
