@@ -9,7 +9,7 @@ args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
 [workflows]
-runButton = "Project"
+runButton = "artifacts/csr-eligibility-portal: web"
 
 [agent]
 stack = "PNPM_WORKSPACE"
