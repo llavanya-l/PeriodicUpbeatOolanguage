@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "CSR Eligibility Portal"
+description = "A professional portal for submitting CSR eligibility applications, calculating eligibility, and reviewing decisions through dedicated user and administrator experiences."
+version = "1.0.0"
+id = "artifacts/csr-eligibility-portal"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21300
+
+[services.development]
+run = "pnpm --filter @workspace/csr-eligibility-portal run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/csr-eligibility-portal", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/csr-eligibility-portal/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21300"
+BASE_PATH = "/"
