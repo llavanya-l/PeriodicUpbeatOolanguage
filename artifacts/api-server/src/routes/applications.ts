@@ -1,4 +1,4 @@
-import { and, desc, eq, ilike, or } from "drizzle-orm";
+import { and, desc, eq, ilike, isNull, or } from "drizzle-orm";
 import { Router, type IRouter } from "express";
 import { db, applicationsTable } from "@workspace/db";
 import {
@@ -14,6 +14,7 @@ import {
   ListApplicationsResponse,
 } from "@workspace/api-zod";
 import { calculateEligibility } from "../lib/eligibility";
+import { requireAdmin, requireAuth } from "../middlewares/auth";
 
 const router: IRouter = Router();
 
@@ -24,7 +25,7 @@ function serializeApplication(application: typeof applicationsTable.$inferSelect
   };
 }
 
-router.get("/applications", async (req, res): Promise<void> => {
+router.get("/applications", requireAuth, async (req, res): Promise<void> => {
   const parsedQuery = ListApplicationsQueryParams.safeParse(req.query);
   if (!parsedQuery.success) {
     res.status(400).json({ error: parsedQuery.error.message });
@@ -33,7 +34,20 @@ router.get("/applications", async (req, res): Promise<void> => {
 
   const { email, search, status } = parsedQuery.data;
   const filters = [];
-  if (email) filters.push(eq(applicationsTable.email, email));
+  const authUser = req.authUser!;
+  if (authUser.role === "user") {
+    filters.push(
+      or(
+        eq(applicationsTable.clerkUserId, authUser.id),
+        and(
+          isNull(applicationsTable.clerkUserId),
+          eq(applicationsTable.email, authUser.email),
+        ),
+      ),
+    );
+  } else if (email) {
+    filters.push(eq(applicationsTable.email, email));
+  }
   if (status && status !== "all") filters.push(eq(applicationsTable.status, status));
   if (search) {
     filters.push(
@@ -54,7 +68,7 @@ router.get("/applications", async (req, res): Promise<void> => {
   res.json(ListApplicationsResponse.parse(applications.map(serializeApplication)));
 });
 
-router.post("/applications", async (req, res): Promise<void> => {
+router.post("/applications", requireAuth, async (req, res): Promise<void> => {
   const parsed = CreateApplicationBody.safeParse(req.body);
   if (!parsed.success) {
     req.log.warn({ errors: parsed.error.message }, "Invalid application body");
@@ -63,10 +77,18 @@ router.post("/applications", async (req, res): Promise<void> => {
   }
 
   const eligibility = calculateEligibility(parsed.data);
+  const authUser = req.authUser!;
+  if (!authUser.email) {
+    res.status(403).json({ error: "A verified email address is required" });
+    return;
+  }
+
   const [application] = await db
     .insert(applicationsTable)
     .values({
       ...parsed.data,
+      clerkUserId: authUser.id,
+      email: authUser.email,
       ...eligibility,
       status: "pending",
     })
@@ -75,7 +97,7 @@ router.post("/applications", async (req, res): Promise<void> => {
   res.status(201).json(CreateApplicationResponse.parse(serializeApplication(application)));
 });
 
-router.get("/applications/summary", async (_req, res): Promise<void> => {
+router.get("/applications/summary", requireAdmin, async (_req, res): Promise<void> => {
   const applications = await db.select().from(applicationsTable);
   const summary = {
     total: applications.length,
@@ -90,7 +112,7 @@ router.get("/applications/summary", async (_req, res): Promise<void> => {
   res.json(GetApplicationSummaryResponse.parse(summary));
 });
 
-router.get("/applications/:id", async (req, res): Promise<void> => {
+router.get("/applications/:id", requireAuth, async (req, res): Promise<void> => {
   const parsedParams = GetApplicationParams.safeParse(req.params);
   if (!parsedParams.success) {
     res.status(400).json({ error: parsedParams.error.message });
@@ -107,10 +129,23 @@ router.get("/applications/:id", async (req, res): Promise<void> => {
     return;
   }
 
+  const authUser = req.authUser!;
+  const canView =
+    authUser.role === "admin" ||
+    application.clerkUserId === authUser.id ||
+    (application.clerkUserId === null && application.email === authUser.email);
+  if (!canView) {
+    res.status(403).json({ error: "You do not have access to this application" });
+    return;
+  }
+
   res.json(GetApplicationResponse.parse(serializeApplication(application)));
 });
 
-router.patch("/applications/:id/decision", async (req, res): Promise<void> => {
+router.patch(
+  "/applications/:id/decision",
+  requireAdmin,
+  async (req, res): Promise<void> => {
   const parsedParams = DecideApplicationParams.safeParse(req.params);
   const parsedBody = DecideApplicationBody.safeParse(req.body);
   if (!parsedParams.success || !parsedBody.success) {
@@ -140,7 +175,8 @@ router.patch("/applications/:id/decision", async (req, res): Promise<void> => {
     return;
   }
 
-  res.json(DecideApplicationResponse.parse(serializeApplication(application)));
-});
+    res.json(DecideApplicationResponse.parse(serializeApplication(application)));
+  },
+);
 
 export default router;

@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import { ArrowRight, ClipboardList, FileText, Home, LogOut, Menu, ShieldCheck, X } from 'lucide-react';
+import { useClerk, useUser } from '@clerk/react';
 import { Link, useLocation } from 'wouter';
 import { useState } from 'react';
 
@@ -56,8 +57,12 @@ const userLinks = [
 export function AppShell({ role, children }: { role: 'user' | 'admin'; children: ReactNode }) {
   const [location, setLocation] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { signOut } = useClerk();
+  const { user } = useUser();
   const isAdmin = role === 'admin';
   const links = isAdmin ? [{ href: '/admin/dashboard', label: 'Review workspace', icon: ClipboardList }] : userLinks;
+  const displayName = user?.firstName || user?.primaryEmailAddress?.emailAddress || (isAdmin ? 'Case reviewer' : 'Your application');
+  const initials = displayName.split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || (isAdmin ? 'CR' : 'AP');
   return (
     <div className="min-h-[100dvh] bg-[hsl(var(--background))]">
       <aside className={`fixed inset-y-0 left-0 z-40 flex w-[260px] flex-col bg-[hsl(var(--sidebar))] px-5 py-6 text-[hsl(var(--sidebar-foreground))] transition-transform duration-300 md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -79,7 +84,7 @@ export function AppShell({ role, children }: { role: 'user' | 'admin'; children:
             <div className="flex items-center gap-2 text-[hsl(var(--accent))]"><ShieldCheck className="size-4" /><span className="font-mono-app text-[10px] uppercase tracking-[.12em]">Private by design</span></div>
             <p className="mt-2 text-xs leading-5 text-[hsl(var(--sidebar-foreground)/.58)]">Your information is used only to assess your application.</p>
           </div>
-          <button onClick={() => setLocation('/')} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-[hsl(var(--sidebar-foreground)/.58)] transition-colors hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-foreground))]" data-testid="button-sign-out"><LogOut className="size-[18px]" />Leave portal</button>
+          <button onClick={() => void signOut({ redirectUrl: '/' })} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-[hsl(var(--sidebar-foreground)/.58)] transition-colors hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-foreground))]" data-testid="button-sign-out"><LogOut className="size-[18px]" />Sign out</button>
         </div>
       </aside>
       {mobileOpen && <button className="fixed inset-0 z-30 bg-[hsl(var(--foreground)/.35)] md:hidden" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" data-testid="button-navigation-overlay" />}
@@ -88,8 +93,8 @@ export function AppShell({ role, children }: { role: 'user' | 'admin'; children:
           <button className="grid size-10 place-items-center rounded-xl border border-[hsl(var(--border))] md:hidden" onClick={() => setMobileOpen(true)} aria-label="Open navigation" data-testid="button-open-navigation"><Menu className="size-5" /></button>
           <div className="hidden items-center gap-2 text-sm text-[hsl(var(--muted-foreground))] md:flex"><span className="size-2 rounded-full bg-[hsl(var(--chart-3))]" />{isAdmin ? 'Staff workspace' : 'Your secure space'}</div>
           <div className="ml-auto flex items-center gap-3">
-            <div className="hidden text-right sm:block"><p className="text-xs font-semibold">{isAdmin ? 'Case reviewer' : 'Your application'}</p><p className="font-mono-app text-[10px] text-[hsl(var(--muted-foreground))]">{isAdmin ? 'CSR team' : 'Applicant portal'}</p></div>
-            <div className="grid size-9 place-items-center rounded-xl bg-[hsl(var(--secondary))] text-sm font-semibold text-[hsl(var(--primary))]">{isAdmin ? 'CR' : 'AP'}</div>
+            <div className="hidden text-right sm:block"><p className="text-xs font-semibold">{displayName}</p><p className="font-mono-app text-[10px] text-[hsl(var(--muted-foreground))]">{isAdmin ? 'CSR team' : 'Applicant portal'}</p></div>
+            <div className="grid size-9 place-items-center rounded-xl bg-[hsl(var(--secondary))] text-sm font-semibold text-[hsl(var(--primary))]">{initials}</div>
           </div>
         </header>
         <main className="mx-auto max-w-[1440px] px-5 py-8 lg:px-10 lg:py-11">{children}</main>

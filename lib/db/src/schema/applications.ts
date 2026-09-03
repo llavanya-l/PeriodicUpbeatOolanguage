@@ -12,6 +12,7 @@ import { z } from "zod/v4";
 
 export const applicationsTable = pgTable("applications", {
   id: serial("id").primaryKey(),
+  clerkUserId: text("clerk_user_id"),
   applicantName: text("applicant_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone").notNull(),
@@ -35,6 +36,7 @@ export const applicationsTable = pgTable("applications", {
 
 export const insertApplicationSchema = createInsertSchema(applicationsTable).omit({
   id: true,
+  clerkUserId: true,
   submittedAt: true,
   reviewedAt: true,
 });

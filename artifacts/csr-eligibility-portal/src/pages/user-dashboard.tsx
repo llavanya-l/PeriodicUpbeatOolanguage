@@ -5,10 +5,7 @@ import { useListApplications } from '@workspace/api-client-react';
 import { AppShell, EmptyState, ErrorState, LoadingBlocks, StatusPill } from '@/components/portal-shell';
 
 export default function UserDashboard() {
-  const [email] = React.useState(
-    () => window.sessionStorage.getItem('civicpath-user-email') ?? 'maya.patel@example.com',
-  );
-  const applicationsQuery = useListApplications({ email });
+  const applicationsQuery = useListApplications();
   const applications = applicationsQuery.data ?? [];
   const current = applications[0];
   return <AppShell role="user">

@@ -1,0 +1,8 @@
+<svg width="176" height="44" viewBox="0 0 176 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="44" height="44" rx="13" fill="#F47D5B"/>
+  <circle cx="16" cy="16" r="4" fill="#1D2C58"/>
+  <circle cx="28" cy="28" r="4" fill="#1D2C58"/>
+  <rect x="20.5" y="12" width="6" height="20" rx="3" fill="#1D2C58"/>
+  <text x="56" y="30" fill="#1D2C58" font-family="Georgia, serif" font-size="24" font-weight="700">civic</text>
+  <text x="113" y="30" fill="#F47D5B" font-family="Georgia, serif" font-size="24" font-weight="700">path</text>
+</svg>
