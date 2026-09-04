@@ -13,13 +13,24 @@ export interface Application {
   applicantName: string;
   email: string;
   phone: string;
+  /** @nullable */
+  age: number | null;
+  /** @nullable */
+  cityDistrict: string | null;
+  /** @nullable */
+  state: string | null;
   program: string;
   region: string;
-  annualIncome: number;
+  /** @nullable */
+  annualIncome: number | null;
   householdSize: number;
   employmentStatus: string;
   hasDisability: boolean;
   requestedSupport: string;
+  /** @nullable */
+  reasonForApplying: string | null;
+  /** @nullable */
+  additionalInformation: string | null;
   /** @nullable */
   notes: string | null;
   eligibilityScore: number;

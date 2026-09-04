@@ -13,17 +13,18 @@ export interface ApplicationInput {
   email: string;
   /** @minLength 7 */
   phone: string;
+  /**
+     * @minimum 0
+     * @maximum 120
+     */
+  age: number;
+  /** @minLength 2 */
+  cityDistrict: string;
+  /** @minLength 2 */
+  state: string;
   /** @minLength 2 */
   program: string;
-  /** @minLength 2 */
-  region: string;
-  /** @minimum 0 */
-  annualIncome: number;
-  /** @minimum 1 */
-  householdSize: number;
   employmentStatus: ApplicationInputEmploymentStatus;
-  hasDisability: boolean;
-  /** @minLength 2 */
-  requestedSupport: string;
-  notes: string;
+  reasonForApplying?: string;
+  additionalInformation?: string;
 }

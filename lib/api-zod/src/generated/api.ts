@@ -31,13 +31,18 @@ export const ListApplicationsResponseItem = zod.object({
   "applicantName": zod.string(),
   "email": zod.string(),
   "phone": zod.string(),
+  "age": zod.number().int().nullable(),
+  "cityDistrict": zod.string().nullable(),
+  "state": zod.string().nullable(),
   "program": zod.string(),
   "region": zod.string(),
-  "annualIncome": zod.number(),
+  "annualIncome": zod.number().nullable(),
   "householdSize": zod.number().int(),
   "employmentStatus": zod.string(),
   "hasDisability": zod.boolean(),
   "requestedSupport": zod.string(),
+  "reasonForApplying": zod.string().nullable(),
+  "additionalInformation": zod.string().nullable(),
   "notes": zod.string().nullable(),
   "eligibilityScore": zod.number().int(),
   "eligibilityStatus": zod.enum(['eligible', 'review', 'not_eligible']),
@@ -56,14 +61,14 @@ export const createApplicationBodyApplicantNameMin = 2;
 
 export const createApplicationBodyPhoneMin = 7;
 
+export const createApplicationBodyAgeMin = 0;
+export const createApplicationBodyAgeMax = 120;
+
+export const createApplicationBodyCityDistrictMin = 2;
+
+export const createApplicationBodyStateMin = 2;
+
 export const createApplicationBodyProgramMin = 2;
-
-export const createApplicationBodyRegionMin = 2;
-
-export const createApplicationBodyAnnualIncomeMin = 0;
-
-
-export const createApplicationBodyRequestedSupportMin = 2;
 
 
 
@@ -71,14 +76,13 @@ export const CreateApplicationBody = zod.object({
   "applicantName": zod.string().min(createApplicationBodyApplicantNameMin),
   "email": zod.string().email(),
   "phone": zod.string().min(createApplicationBodyPhoneMin),
+  "age": zod.number().int().min(createApplicationBodyAgeMin).max(createApplicationBodyAgeMax),
+  "cityDistrict": zod.string().min(createApplicationBodyCityDistrictMin),
+  "state": zod.string().min(createApplicationBodyStateMin),
   "program": zod.string().min(createApplicationBodyProgramMin),
-  "region": zod.string().min(createApplicationBodyRegionMin),
-  "annualIncome": zod.number().min(createApplicationBodyAnnualIncomeMin),
-  "householdSize": zod.number().int().min(1),
   "employmentStatus": zod.enum(['employed', 'self_employed', 'unemployed', 'student', 'retired']),
-  "hasDisability": zod.boolean(),
-  "requestedSupport": zod.string().min(createApplicationBodyRequestedSupportMin),
-  "notes": zod.string()
+  "reasonForApplying": zod.string().optional(),
+  "additionalInformation": zod.string().optional()
 })
 
 export const CreateApplicationResponse = zod.object({
@@ -86,13 +90,18 @@ export const CreateApplicationResponse = zod.object({
   "applicantName": zod.string(),
   "email": zod.string(),
   "phone": zod.string(),
+  "age": zod.number().int().nullable(),
+  "cityDistrict": zod.string().nullable(),
+  "state": zod.string().nullable(),
   "program": zod.string(),
   "region": zod.string(),
-  "annualIncome": zod.number(),
+  "annualIncome": zod.number().nullable(),
   "householdSize": zod.number().int(),
   "employmentStatus": zod.string(),
   "hasDisability": zod.boolean(),
   "requestedSupport": zod.string(),
+  "reasonForApplying": zod.string().nullable(),
+  "additionalInformation": zod.string().nullable(),
   "notes": zod.string().nullable(),
   "eligibilityScore": zod.number().int(),
   "eligibilityStatus": zod.enum(['eligible', 'review', 'not_eligible']),
@@ -129,13 +138,18 @@ export const GetApplicationResponse = zod.object({
   "applicantName": zod.string(),
   "email": zod.string(),
   "phone": zod.string(),
+  "age": zod.number().int().nullable(),
+  "cityDistrict": zod.string().nullable(),
+  "state": zod.string().nullable(),
   "program": zod.string(),
   "region": zod.string(),
-  "annualIncome": zod.number(),
+  "annualIncome": zod.number().nullable(),
   "householdSize": zod.number().int(),
   "employmentStatus": zod.string(),
   "hasDisability": zod.boolean(),
   "requestedSupport": zod.string(),
+  "reasonForApplying": zod.string().nullable(),
+  "additionalInformation": zod.string().nullable(),
   "notes": zod.string().nullable(),
   "eligibilityScore": zod.number().int(),
   "eligibilityStatus": zod.enum(['eligible', 'review', 'not_eligible']),
@@ -163,13 +177,18 @@ export const DecideApplicationResponse = zod.object({
   "applicantName": zod.string(),
   "email": zod.string(),
   "phone": zod.string(),
+  "age": zod.number().int().nullable(),
+  "cityDistrict": zod.string().nullable(),
+  "state": zod.string().nullable(),
   "program": zod.string(),
   "region": zod.string(),
-  "annualIncome": zod.number(),
+  "annualIncome": zod.number().nullable(),
   "householdSize": zod.number().int(),
   "employmentStatus": zod.string(),
   "hasDisability": zod.boolean(),
   "requestedSupport": zod.string(),
+  "reasonForApplying": zod.string().nullable(),
+  "additionalInformation": zod.string().nullable(),
   "notes": zod.string().nullable(),
   "eligibilityScore": zod.number().int(),
   "eligibilityStatus": zod.enum(['eligible', 'review', 'not_eligible']),

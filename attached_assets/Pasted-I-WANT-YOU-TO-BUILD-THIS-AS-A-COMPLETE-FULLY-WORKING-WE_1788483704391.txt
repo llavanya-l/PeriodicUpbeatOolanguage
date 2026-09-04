@@ -1,0 +1,1669 @@
+I WANT YOU TO BUILD THIS AS A COMPLETE, FULLY WORKING WEB APPLICATION.
+
+IMPORTANT:
+DO NOT GIVE ME A SKELETON.
+DO NOT CREATE PLACEHOLDER BUTTONS.
+DO NOT CREATE FAKE LOGIN.
+DO NOT CREATE STATIC DEMO DATA.
+DO NOT LEAVE TODO COMMENTS.
+DO NOT SAY "THIS CAN BE IMPLEMENTED LATER".
+DO NOT JUST DESIGN THE UI.
+
+Actually implement the complete working application from frontend to backend and database.
+
+The final result should feel like a polished startup/SaaS product that I can demonstrate at a hackathon.
+
+==================================================
+PRODUCT
+==================================================
+
+Product name:
+
+CivicPath
+
+Tagline:
+
+CSR Compliance, Simplified.
+
+CivicPath is a CSR eligibility and compliance assessment portal for companies in India.
+
+The application allows a company/user to:
+
+1. Create an account
+2. Log in securely with email + password
+3. Complete a CSR assessment
+4. Calculate initial CSR applicability
+5. Optionally calculate an indicative CSR obligation
+6. View the assessment result
+7. View a CSR compliance roadmap
+8. Track assessment/review status
+9. Contact support
+10. View previous assessments
+
+Administrators can:
+
+1. Log in securely
+2. View all company assessments
+3. View individual assessment details
+4. Approve an assessment
+5. Reject an assessment
+6. Request clarification
+7. Add internal notes
+8. View support messages
+9. View dashboard statistics
+10. Manage assessment records
+
+==================================================
+VERY IMPORTANT: REAL AUTHENTICATION
+==================================================
+
+Implement REAL authentication.
+
+Do NOT use:
+
+- fake login
+- hardcoded frontend credentials
+- localStorage-only authentication
+- fake "logged in" state
+- demo admin buttons
+- plaintext passwords
+
+Users must be able to:
+
+REGISTER
+
+Fields:
+
+- Full Name
+- Email
+- Password
+- Confirm Password
+
+LOGIN
+
+Fields:
+
+- Email
+- Password
+
+Include:
+
+- password hashing
+- secure sessions or secure token authentication
+- logout
+- protected routes
+- authentication persistence
+- login validation
+- registration validation
+- incorrect-password errors
+- duplicate-email handling
+- password confirmation validation
+- loading states
+- logout functionality
+
+Passwords must NEVER be stored as plaintext.
+
+Use the project's existing authentication/database architecture if one already exists.
+
+If the project already uses Clerk or another authentication system, use it properly instead of creating a second competing authentication system.
+
+==================================================
+ADMIN AUTHENTICATION
+==================================================
+
+There must be a REAL distinction between:
+
+USER
+and
+ADMIN
+
+The user's role must be determined server-side.
+
+Never trust a frontend variable to determine whether someone is an admin.
+
+Create/provide a secure way for the project owner to configure the administrator account using environment variables/secrets or the existing authentication provider.
+
+For example:
+
+ADMIN_EMAILS
+
+or an equivalent secure mechanism.
+
+Do NOT put admin credentials in frontend code.
+
+Do NOT expose secrets in the browser.
+
+Do NOT hardcode an admin password into React.
+
+Admin-only API routes must verify the authenticated user's server-side role.
+
+A normal user must NEVER be able to access:
+
+- admin dashboard
+- admin API endpoints
+- other users' assessments
+- internal admin notes
+- admin actions
+
+If a normal user attempts to access an admin route, return an appropriate unauthorized/forbidden response and redirect them to their dashboard.
+
+==================================================
+DATABASE
+==================================================
+
+Use the existing production database if the project already has one.
+
+If a database exists, MODIFY it safely rather than unnecessarily replacing the entire architecture.
+
+Create proper database models/tables for at least:
+
+USERS
+
+Fields conceptually:
+
+- id
+- name
+- email
+- role
+- createdAt
+- updatedAt
+
+ASSESSMENTS
+
+Fields:
+
+- id
+- userId
+- companyName
+- cin
+- companyType
+- financialYear
+- registeredState
+- industry
+- netWorth
+- turnover
+- netProfit
+- profitYear1
+- profitYear2
+- profitYear3
+- csrApplicable
+- applicabilityReason
+- averageProfit
+- indicativeCsrObligation
+- csrPolicyStatus
+- governanceStatus
+- annualActionPlanStatus
+- implementingAgencyStatus
+- csrFocusAreas
+- additionalNotes
+- reviewStatus
+- adminNote
+- createdAt
+- updatedAt
+
+SUPPORT_MESSAGES
+
+Fields:
+
+- id
+- userId if available
+- name
+- email
+- subject
+- message
+- status
+- createdAt
+
+Use proper relationships.
+
+Do not expose another user's assessment simply by changing an ID in the URL.
+
+A user can only access their own assessments.
+
+Admins can access all assessments.
+
+==================================================
+LANDING PAGE
+==================================================
+
+Create a polished professional landing page.
+
+Header:
+
+CivicPath logo/brand
+
+Navigation:
+
+- Home
+- About CSR
+- How It Works
+- Contact
+- Login
+- Get Started
+
+Hero section:
+
+CSR Compliance, Simplified.
+
+Supporting text:
+
+Assess CSR applicability, estimate your indicative CSR obligation, and understand the compliance steps your company may need to take.
+
+Primary button:
+
+Start CSR Assessment
+
+Secondary button:
+
+Learn About CSR
+
+Create a professional visual hierarchy.
+
+Do NOT make it look like a generic school project.
+
+Use:
+
+- clean typography
+- professional cards
+- subtle borders
+- good spacing
+- responsive layout
+- modern SaaS-style interface
+- accessible contrast
+- polished buttons
+- consistent design system
+
+==================================================
+LANDING PAGE CONTENT
+==================================================
+
+Add an "About CSR" section.
+
+Explain that Section 135 of the Companies Act, 2013 contains CSR provisions for qualifying companies.
+
+Clearly state that the application provides an INITIAL/INDICATIVE assessment and is NOT legal advice.
+
+Add threshold cards:
+
+Net Worth
+
+₹500 Crore or more
+
+Turnover
+
+₹1,000 Crore or more
+
+Net Profit
+
+₹5 Crore or more
+
+Explain that the initial prototype checks whether at least one of the relevant financial thresholds is met.
+
+Do NOT present the application as an official government portal.
+
+Add:
+
+"Prototype / informational assessment only. Companies should verify current legal requirements and obtain professional advice where appropriate."
+
+==================================================
+REGISTRATION PAGE
+==================================================
+
+Create a polished registration page.
+
+Fields:
+
+Full Name
+Email
+Password
+Confirm Password
+
+Password requirements:
+
+- minimum reasonable password length
+- clear validation
+- show/hide password button
+- confirm password validation
+
+After successful registration:
+
+- create account
+- authenticate user
+- redirect to user dashboard
+
+Do not create fake accounts.
+
+Show clear errors.
+
+Example:
+
+"An account with this email already exists."
+
+==================================================
+LOGIN PAGE
+==================================================
+
+Create a polished login page.
+
+Fields:
+
+Email
+Password
+
+Features:
+
+- show/hide password
+- remember authentication/session appropriately
+- validation
+- loading state
+- error message
+- successful redirect
+
+If user is an ADMIN:
+
+redirect to:
+
+/admin
+
+If user is a normal USER:
+
+redirect to:
+
+/dashboard
+
+Never rely only on the frontend for this distinction.
+
+==================================================
+USER DASHBOARD
+==================================================
+
+Create a real dashboard.
+
+Top:
+
+Welcome, [user name]
+
+Cards:
+
+Assessment Status
+CSR Applicability
+Indicative CSR Obligation
+Review Status
+
+Example:
+
+Assessment Status:
+Completed
+
+CSR Applicability:
+Applicable
+
+Indicative Obligation:
+₹12.40 Lakh
+
+Review Status:
+Pending Review
+
+Add action cards/buttons:
+
+Start New Assessment
+View Assessment
+Compliance Roadmap
+Contact Support
+
+Add recent assessments table.
+
+Columns:
+
+Company
+Financial Year
+CSR Status
+Review Status
+Date
+Action
+
+Clicking an assessment opens its actual saved record.
+
+No fake data.
+
+==================================================
+ASSESSMENT EXPERIENCE
+==================================================
+
+The assessment must be a REAL multi-step form.
+
+Use a wizard/progress indicator.
+
+Steps:
+
+1. Company Information
+2. Financial Eligibility
+3. CSR Obligation
+4. CSR Readiness
+5. Review & Submit
+
+IMPORTANT:
+
+Keep the form concise.
+
+Do NOT force users to fill unnecessary information.
+
+==================================================
+STEP 1 — COMPANY INFORMATION
+==================================================
+
+REQUIRED:
+
+Company Name
+CIN / Registration Number
+Company Type
+Financial Year
+
+OPTIONAL:
+
+Registered State
+Industry
+
+Clearly display:
+
+Required
+
+and
+
+Optional
+
+Do not make optional fields required in frontend OR backend validation.
+
+Company type could have choices such as:
+
+Private Limited
+Public Limited
+LLP
+Section 8 Company
+Other
+
+Financial year should use a clean selector.
+
+==================================================
+STEP 2 — FINANCIAL ELIGIBILITY
+==================================================
+
+Required:
+
+Net Worth
+Turnover
+Net Profit for immediately preceding financial year
+
+Use numeric inputs.
+
+Show ₹ formatting where appropriate.
+
+Show helper text explaining what each field represents.
+
+Do NOT ask for household income.
+
+Do NOT ask for age.
+
+Do NOT ask for employment.
+
+Do NOT ask for beneficiary information.
+
+Do NOT ask for irrelevant personal information.
+
+Calculate initial CSR applicability.
+
+LOGIC:
+
+IF:
+
+netWorth >= 500 crore
+
+OR
+
+turnover >= 1000 crore
+
+OR
+
+netProfit >= 5 crore
+
+THEN:
+
+csrApplicable = true
+
+OTHERWISE:
+
+csrApplicable = false
+
+Do this calculation on the SERVER as well as the frontend.
+
+The frontend can preview the result.
+
+The backend must be authoritative.
+
+Show a live result such as:
+
+"Based on the information entered, your company appears to meet at least one CSR applicability threshold."
+
+or
+
+"Based on the information entered, your company does not appear to meet the listed thresholds."
+
+Clearly label this:
+
+INITIAL / INDICATIVE ASSESSMENT
+
+==================================================
+STEP 3 — INDICATIVE CSR OBLIGATION
+==================================================
+
+This step should be optional.
+
+Do NOT force the user to enter three years of profit data.
+
+Show:
+
+"Would you like to calculate an indicative CSR obligation?"
+
+Buttons:
+
+Yes, calculate
+Skip for now
+
+If YES:
+
+ask for:
+
+Profit — Year 1
+Profit — Year 2
+Profit — Year 3
+
+These should be clearly associated with the relevant financial years.
+
+Calculate:
+
+Average Profit =
+(profit1 + profit2 + profit3) / 3
+
+Indicative CSR Obligation =
+Average Profit × 2%
+
+Display the calculation transparently.
+
+Example:
+
+Average profit:
+₹6.20 Crore
+
+Indicative CSR obligation:
+₹12.40 Lakh
+
+Use proper Indian currency formatting.
+
+Do not claim that this is a final legally determined obligation.
+
+Label it:
+
+INDICATIVE CSR OBLIGATION
+
+If the user skips it:
+
+save the assessment with the obligation as null/unavailable.
+
+Do not block submission.
+
+==================================================
+STEP 4 — CSR READINESS
+==================================================
+
+Everything in this step should be OPTIONAL.
+
+CSR Policy Status:
+
+- In Place
+- In Progress
+- Not Yet Prepared
+- Not Sure
+
+Governance Status:
+
+- Established
+- In Progress
+- Not Yet Established
+- Not Sure
+
+Annual Action Plan:
+
+- Prepared
+- In Progress
+- Not Yet Prepared
+- Not Sure
+
+Implementing Agency:
+
+- Identified
+- In Progress
+- Not Yet Identified
+- Not Applicable
+- Not Sure
+
+CSR Focus Areas:
+
+Allow selecting multiple areas.
+
+Examples:
+
+Education
+Healthcare
+Environmental Sustainability
+Rural Development
+Women Empowerment
+Skill Development
+Poverty Alleviation
+Other
+
+Additional Notes:
+
+optional textarea.
+
+Again:
+
+DO NOT make these fields required.
+
+==================================================
+STEP 5 — REVIEW & SUBMIT
+==================================================
+
+Show a clean summary.
+
+Company:
+
+[company name]
+
+CIN:
+
+[CIN]
+
+Financial Year:
+
+[FY]
+
+Net Worth:
+
+₹...
+
+Turnover:
+
+₹...
+
+Net Profit:
+
+₹...
+
+CSR Applicability:
+
+Applicable / Not Applicable
+
+Indicative CSR Obligation:
+
+₹... / Not calculated
+
+CSR Readiness:
+
+summary
+
+Show:
+
+"Review your information before submitting."
+
+Button:
+
+Submit Assessment
+
+On submit:
+
+- validate data
+- calculate authoritative result on backend
+- save to database
+- associate with authenticated user
+- set reviewStatus = PENDING
+- redirect to result page
+
+Prevent accidental duplicate submissions.
+
+Show loading state:
+
+Submitting Assessment...
+
+==================================================
+RESULT PAGE
+==================================================
+
+Create a professional result page.
+
+Header:
+
+CSR Assessment Complete
+
+Main result card:
+
+CSR Applicability
+
+Applicable
+
+or
+
+Not Applicable
+
+Use clear visual styling.
+
+Show reason:
+
+"Your company meets at least one of the configured CSR applicability thresholds based on the financial information provided."
+
+OR
+
+"Your company does not meet the configured CSR applicability thresholds based on the financial information provided."
+
+Then show threshold comparison.
+
+Three cards:
+
+Net Worth
+Entered: ₹X
+Threshold: ₹500 Crore
+Status: Met / Not Met
+
+Turnover
+Entered: ₹X
+Threshold: ₹1,000 Crore
+Status: Met / Not Met
+
+Net Profit
+Entered: ₹X
+Threshold: ₹5 Crore
+Status: Met / Not Met
+
+If obligation was calculated:
+
+Show:
+
+Indicative CSR Obligation
+
+₹X
+
+And:
+
+Average Profit
+
+₹X
+
+Show the formula:
+
+Average of 3 years' profit × 2%
+
+Clearly label it:
+
+INDICATIVE ONLY
+
+Then show:
+
+Admin Review Status
+
+Pending Review
+
+or
+
+Approved
+
+or
+
+Needs Clarification
+
+or
+
+Rejected
+
+IMPORTANT:
+
+The admin review status must NOT change the automatic CSR applicability result.
+
+For example:
+
+CSR Applicability = Applicable
+
+Review Status = Rejected
+
+is valid.
+
+The two systems are independent.
+
+Buttons:
+
+View Compliance Roadmap
+Back to Dashboard
+
+==================================================
+COMPLIANCE ROADMAP
+==================================================
+
+Create a beautiful roadmap/timeline.
+
+Title:
+
+Your CSR Compliance Roadmap
+
+Steps:
+
+1. Assess Eligibility
+2. Establish Governance
+3. Develop / Review CSR Policy
+4. Identify Eligible CSR Projects
+5. Prepare Annual Action Plan
+6. Implement and Monitor
+7. Report and Disclose
+
+Each step should have:
+
+- number
+- title
+- short explanation
+- status where appropriate
+
+Use careful wording.
+
+Do not make unsupported claims that every company must follow exactly the same process.
+
+Add a disclaimer:
+
+"Requirements can vary based on company circumstances and current law. This roadmap is for general informational purposes."
+
+==================================================
+CONTACT SUPPORT
+==================================================
+
+Create a real contact form.
+
+Fields:
+
+Name
+Email
+Subject
+Message
+
+Submit to backend.
+
+Save message in SUPPORT_MESSAGES table.
+
+After submission show:
+
+"Your message has been submitted successfully."
+
+Do NOT pretend an email was sent unless an actual email service is configured.
+
+Admin should be able to view support messages.
+
+==================================================
+ADMIN DASHBOARD
+==================================================
+
+Create a separate professional admin dashboard.
+
+Top navigation:
+
+CivicPath Admin
+
+Dashboard
+Assessments
+Support
+Logout
+
+Dashboard statistic cards:
+
+Total Assessments
+CSR Applicable
+CSR Not Applicable
+Pending Review
+Approved
+Needs Clarification
+Rejected
+
+All statistics must come from the database.
+
+No hardcoded numbers.
+
+==================================================
+ADMIN ASSESSMENTS TABLE
+==================================================
+
+Create a real table.
+
+Columns:
+
+Company
+CIN
+Financial Year
+CSR Applicability
+Indicative Obligation
+Review Status
+Submitted
+Actions
+
+Add:
+
+Search
+Filter by CSR status
+Filter by review status
+Filter by financial year
+Sorting where useful
+
+Make it responsive.
+
+On mobile, use cards or a responsive layout rather than overflowing the page.
+
+==================================================
+ADMIN ASSESSMENT DETAILS
+==================================================
+
+Admin can click an assessment.
+
+Show:
+
+Company information
+Financial information
+CSR applicability calculation
+Threshold comparison
+Three-year profit information if supplied
+Indicative obligation
+CSR readiness
+Focus areas
+Additional notes
+Review history/status
+
+Admin actions:
+
+Approve
+Reject
+Request Clarification
+
+Admin can enter an internal note.
+
+Example:
+
+"Please verify the financial figures before final review."
+
+Internal notes must NOT be visible to normal users.
+
+When admin changes review status:
+
+DO NOT change:
+
+csrApplicable
+
+netWorth
+
+turnover
+
+netProfit
+
+indicativeCsrObligation
+
+The admin review system is separate from the automated calculation.
+
+==================================================
+ADMIN SECURITY
+==================================================
+
+Every admin endpoint must check:
+
+1. user is authenticated
+2. user has ADMIN role
+
+Never simply hide admin buttons.
+
+For example:
+
+GET /api/admin/assessments
+
+must reject normal users.
+
+POST /api/admin/assessments/:id/approve
+
+must reject normal users.
+
+GET /api/admin/support
+
+must reject normal users.
+
+etc.
+
+Also prevent IDOR:
+
+A normal user must not be able to access:
+
+/assessment/another-users-id
+
+by manually changing the URL.
+
+==================================================
+USER DATA SECURITY
+==================================================
+
+Users can only:
+
+- view their own assessments
+- create their own assessments
+- update their own incomplete assessments if supported
+- view their own support messages if supported
+
+Admins can view all.
+
+Never return passwords.
+
+Never return authentication secrets.
+
+Never expose internal admin notes to users.
+
+==================================================
+FORM VALIDATION
+==================================================
+
+Implement proper validation on BOTH:
+
+frontend
+
+and
+
+backend.
+
+Required:
+
+Company Name
+CIN
+Company Type
+Financial Year
+Net Worth
+Turnover
+Net Profit
+
+Optional fields may be empty/null.
+
+Reject:
+
+negative financial values
+invalid email
+empty required fields
+invalid financial year
+invalid numeric input
+
+Handle extremely large values safely.
+
+Do not let malformed requests bypass validation.
+
+==================================================
+CURRENCY
+==================================================
+
+Use Indian formatting.
+
+Examples:
+
+₹5 Crore
+₹1,000 Crore
+₹12.40 Lakh
+
+For numeric amounts, use proper formatting such as:
+
+₹12,40,000
+
+Do not show confusing raw decimals everywhere.
+
+==================================================
+ERROR HANDLING
+==================================================
+
+Every API request should have proper error handling.
+
+Frontend should display user-friendly messages.
+
+Examples:
+
+"Something went wrong. Please try again."
+
+"Your session has expired. Please log in again."
+
+"Unable to submit assessment."
+
+"Unable to load assessments."
+
+Do not display raw stack traces to users.
+
+Log useful technical errors server-side.
+
+==================================================
+LOADING STATES
+==================================================
+
+Implement loading states everywhere appropriate.
+
+Examples:
+
+Signing in...
+Creating account...
+Loading dashboard...
+Calculating...
+Submitting assessment...
+Updating review...
+Sending message...
+
+Disable submit buttons during requests to prevent duplicate submissions.
+
+==================================================
+EMPTY STATES
+==================================================
+
+If a user has no assessments:
+
+show:
+
+"No assessments yet"
+
+with:
+
+"Start your first CSR assessment"
+
+If admin has no pending assessments:
+
+show:
+
+"No pending assessments"
+
+If there are no support messages:
+
+show a proper empty state.
+
+==================================================
+RESPONSIVE DESIGN
+==================================================
+
+The entire application must work on:
+
+desktop
+tablet
+mobile
+
+Do not build desktop-only layouts.
+
+Forms should be easy to complete on mobile.
+
+Tables should become responsive cards or horizontally scroll where appropriate.
+
+==================================================
+ACCESSIBILITY
+==================================================
+
+Use:
+
+- labels for inputs
+- keyboard-friendly controls
+- visible focus states
+- sufficient contrast
+- accessible buttons
+- semantic headings
+- error messages associated with fields
+
+Do not use placeholder text as the only field label.
+
+==================================================
+NAVIGATION
+==================================================
+
+Routes should conceptually include:
+
+/
+ /login
+ /register
+ /dashboard
+ /assessment/new
+ /assessment/:id
+ /roadmap
+ /contact
+ /admin
+ /admin/assessments
+ /admin/assessments/:id
+ /admin/support
+
+Protect routes appropriately.
+
+Unauthenticated users should not access dashboard pages.
+
+Normal users should not access admin pages.
+
+==================================================
+DATABASE PERSISTENCE
+==================================================
+
+This is extremely important.
+
+Refresh the browser.
+
+Log out.
+
+Log back in.
+
+The data must still exist.
+
+Do NOT use localStorage as the database.
+
+Do NOT use hardcoded arrays as the database.
+
+All important application data must persist in the real database.
+
+==================================================
+ASSESSMENT STATUS MODEL
+==================================================
+
+Keep these concepts separate:
+
+AUTOMATED CSR ASSESSMENT:
+
+Applicable
+Not Applicable
+
+ADMIN REVIEW:
+
+Pending Review
+Approved
+Needs Clarification
+Rejected
+
+Never mix these two statuses.
+
+==================================================
+LEGAL CONTENT
+==================================================
+
+Use the CSR information supplied for this project as general informational content.
+
+The prototype should reference:
+
+Section 135 of the Companies Act, 2013
+
+Relevant commonly presented thresholds:
+
+Net worth ≥ ₹500 crore
+OR
+Turnover ≥ ₹1,000 crore
+OR
+Net profit ≥ ₹5 crore
+
+Use careful language:
+
+"Initial assessment based on the information entered."
+
+Do NOT say:
+
+"You are legally compliant."
+
+Do NOT say:
+
+"The government has approved your company."
+
+Do NOT claim CivicPath is an official MCA/government system.
+
+Do NOT provide individualized legal advice.
+
+Include disclaimer text throughout appropriate areas.
+
+==================================================
+UI DESIGN
+==================================================
+
+Make the UI look like a REAL SaaS application.
+
+Design principles:
+
+- professional
+- modern
+- clean
+- minimal
+- premium
+- easy to understand
+- strong visual hierarchy
+
+Use a consistent design system.
+
+Create:
+
+buttons
+cards
+badges
+alerts
+form controls
+tables
+modals
+dialogs
+progress indicators
+navigation
+sidebar where appropriate
+empty states
+success states
+error states
+
+Do not overuse animations.
+
+Use subtle transitions.
+
+Do not make every section a huge rounded card.
+
+Avoid excessive gradients.
+
+Avoid excessive emojis.
+
+The site should look professional enough for a hackathon judging panel.
+
+==================================================
+DASHBOARD VISUAL DESIGN
+==================================================
+
+User dashboard should have:
+
+Sidebar/navigation
+
+Overview
+My Assessments
+Compliance Roadmap
+Contact Support
+Profile
+Logout
+
+Main content:
+
+Welcome section
+Statistics
+Recent assessments
+Quick actions
+
+Admin dashboard should have:
+
+Overview
+Assessments
+Support
+Logout
+
+Main content:
+
+Statistics
+Charts if useful
+Assessment table
+Recent activity
+
+Charts must use actual database values.
+
+Do not invent statistics.
+
+==================================================
+PROFILE
+==================================================
+
+Add a basic user profile area.
+
+Display:
+
+Name
+Email
+Account role
+
+Allow changing name if appropriate.
+
+Do NOT allow users to arbitrarily change their role.
+
+Admin role must only be controlled server-side.
+
+==================================================
+SECURITY CHECK
+==================================================
+
+Before considering the task complete, test:
+
+1. Register user
+2. Login user
+3. Logout user
+4. Login again
+5. Create assessment
+6. Refresh page
+7. Verify assessment persists
+8. View assessment
+9. Verify CSR calculation
+10. Verify optional fields can remain empty
+11. Submit support request
+12. Login as admin
+13. View assessment
+14. Approve assessment
+15. Verify review status changes
+16. Verify CSR applicability does NOT change
+17. Reject another assessment
+18. Verify normal user cannot access admin
+19. Verify user cannot access another user's assessment
+20. Verify invalid forms are rejected
+21. Verify mobile layout
+22. Verify no console-breaking errors
+23. Verify no secrets appear in frontend
+24. Verify no plaintext passwords
+25. Verify production build
+
+==================================================
+IMPORTANT ABOUT EXISTING PROJECT
+==================================================
+
+Do NOT blindly rebuild the entire project from scratch.
+
+First inspect the existing codebase.
+
+Identify:
+
+- frontend framework
+- backend
+- database
+- authentication
+- routing
+- existing components
+- existing schema
+- existing API structure
+
+Then modify/refactor the existing project where practical.
+
+Preserve working infrastructure.
+
+If existing authentication is already configured, integrate with it properly.
+
+If existing database tables/models exist, migrate them safely.
+
+Do not destroy working production data unless absolutely necessary.
+
+==================================================
+OLD APPLICATION CLEANUP
+==================================================
+
+Remove obsolete beneficiary-oriented functionality.
+
+Remove fields such as:
+
+Age
+Employment Status
+Household Income
+Personal Support Requirements
+Beneficiary Information
+Personal demographic fields
+Other irrelevant fields
+
+These should not appear anywhere in the new assessment flow.
+
+Do not leave old form fields hidden but still required in the backend.
+
+Update:
+
+frontend
+backend
+database schema
+API payloads
+validation
+types
+queries
+result pages
+
+so the obsolete system is actually removed.
+
+==================================================
+OPTIONAL INFORMATION
+==================================================
+
+This is VERY IMPORTANT.
+
+The application should not feel like a giant government form.
+
+Only ask for the information needed for the initial assessment first.
+
+Required initial assessment:
+
+Company Name
+CIN / Registration Number
+Company Type
+Financial Year
+Net Worth
+Turnover
+Net Profit
+
+Everything else should be optional.
+
+Progressively reveal:
+
+Three-year profits only if user wants indicative obligation calculation.
+
+CSR readiness only if user wants to provide it.
+
+Additional notes only if needed.
+
+Optional fields must genuinely be optional.
+
+A user should be able to complete the core assessment quickly.
+
+==================================================
+NO FAKE DATA
+==================================================
+
+Do not seed fake company applications into production unless the project explicitly needs development seed data.
+
+The real dashboards should reflect actual database records.
+
+If seed data is necessary for development, clearly isolate it from production.
+
+==================================================
+NO PLACEHOLDER CONTENT
+==================================================
+
+Do not leave:
+
+"Lorem ipsum"
+
+"Coming soon"
+
+"Feature coming soon"
+
+"TODO"
+
+"Sample company"
+
+"Demo assessment"
+
+"Placeholder"
+
+unless it is explicitly part of a harmless empty state.
+
+==================================================
+FINAL POLISH
+==================================================
+
+Before finishing:
+
+Inspect every page visually.
+
+Fix:
+
+- spacing
+- alignment
+- typography
+- mobile layout
+- button consistency
+- form validation
+- loading states
+- empty states
+- errors
+- navigation
+- authentication redirects
+
+Make the experience coherent from:
+
+Landing page
+→ Register
+→ Login
+→ Dashboard
+→ Assessment
+→ Result
+→ Roadmap
+→ Support
+
+and:
+
+Admin Login
+→ Admin Dashboard
+→ Assessments
+→ Assessment Detail
+→ Review Action
+→ Support
+
+==================================================
+PRODUCTION READINESS
+==================================================
+
+Make sure:
+
+- database migrations/schema are correct
+- server starts successfully
+- frontend builds successfully
+- APIs work
+- authentication works
+- protected routes work
+- admin authorization works
+- production deployment works
+- no TypeScript errors
+- no broken imports
+- no obvious runtime errors
+
+Run the available tests/build/typecheck commands.
+
+Fix errors rather than stopping after discovering them.
+
+==================================================
+IMPORTANT FINAL REQUIREMENT
+==================================================
+
+When you finish, DO NOT merely tell me what you would implement.
+
+Actually implement it.
+
+Then give me a concise final report containing:
+
+1. What was implemented
+2. Database/authentication changes
+3. User features
+4. Admin features
+5. Routes
+6. Any environment variables/secrets I need to configure
+7. How to create/configure the admin account securely
+8. How to test the complete flow
+
+Do not expose any secret values.
+
+The final website must be functional, persistent, authenticated, responsive, and presentation-ready.
+
+BUILD THE ACTUAL PRODUCT NOW.

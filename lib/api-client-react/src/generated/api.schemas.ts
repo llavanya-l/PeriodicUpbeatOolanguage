@@ -32,13 +32,24 @@ export interface Application {
   applicantName: string;
   email: string;
   phone: string;
+  /** @nullable */
+  age: number | null;
+  /** @nullable */
+  cityDistrict: string | null;
+  /** @nullable */
+  state: string | null;
   program: string;
   region: string;
-  annualIncome: number;
+  /** @nullable */
+  annualIncome: number | null;
   householdSize: number;
   employmentStatus: string;
   hasDisability: boolean;
   requestedSupport: string;
+  /** @nullable */
+  reasonForApplying: string | null;
+  /** @nullable */
+  additionalInformation: string | null;
   /** @nullable */
   notes: string | null;
   eligibilityScore: number;
@@ -68,19 +79,20 @@ export interface ApplicationInput {
   email: string;
   /** @minLength 7 */
   phone: string;
+  /**
+     * @minimum 0
+     * @maximum 120
+     */
+  age: number;
+  /** @minLength 2 */
+  cityDistrict: string;
+  /** @minLength 2 */
+  state: string;
   /** @minLength 2 */
   program: string;
-  /** @minLength 2 */
-  region: string;
-  /** @minimum 0 */
-  annualIncome: number;
-  /** @minimum 1 */
-  householdSize: number;
   employmentStatus: ApplicationInputEmploymentStatus;
-  hasDisability: boolean;
-  /** @minLength 2 */
-  requestedSupport: string;
-  notes: string;
+  reasonForApplying?: string;
+  additionalInformation?: string;
 }
 
 export type DecisionInputStatus = typeof DecisionInputStatus[keyof typeof DecisionInputStatus];
