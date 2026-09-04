@@ -2,23 +2,26 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
-  description: CSR eligibility application and review API
+  version: 0.2.0
+  description: CivicPath company CSR assessment and compliance API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
-  - name: applications
-    description: CSR eligibility applications
+  - name: assessments
+    description: Authenticated company CSR assessments
+  - name: admin
+    description: Administrator review and reporting operations
+  - name: support
+    description: Authenticated support messaging
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -26,101 +29,203 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
-  /applications:
+  /assessments:
     get:
-      operationId: listApplications
-      tags: [applications]
-      summary: List CSR applications
-      parameters:
-        - name: email
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: status
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [all, pending, approved, rejected]
-        - name: search
-          in: query
-          required: false
-          schema:
-            type: string
+      operationId: listAssessments
+      tags: [assessments]
+      summary: List the authenticated user's company assessments
       responses:
         "200":
-          description: Applications
+          description: Assessments
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Application"
+                  $ref: "#/components/schemas/Assessment"
     post:
-      operationId: createApplication
-      tags: [applications]
-      summary: Submit a CSR eligibility application
+      operationId: createAssessment
+      tags: [assessments]
+      summary: Create a company CSR assessment
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ApplicationInput"
+              $ref: "#/components/schemas/AssessmentInput"
       responses:
         "201":
-          description: Created application with calculated eligibility
+          description: Created assessment with authoritative calculations
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Application"
+                $ref: "#/components/schemas/Assessment"
         "400":
-          description: Invalid application
+          description: Invalid assessment
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /applications/summary:
+  /assessments/{id}:
     get:
-      operationId: getApplicationSummary
-      tags: [applications]
-      summary: Get application summary for administrators
-      responses:
-        "200":
-          description: Application summary
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApplicationSummary"
-  /applications/{id}:
-    get:
-      operationId: getApplication
-      tags: [applications]
-      summary: Get one application
+      operationId: getAssessment
+      tags: [assessments]
+      summary: Get one of the authenticated user's assessments
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+        - $ref: "#/components/parameters/AssessmentId"
       responses:
         "200":
-          description: Application
+          description: Assessment
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Application"
+                $ref: "#/components/schemas/Assessment"
         "404":
           description: Not found
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /applications/{id}/decision:
+  /admin/summary:
+    get:
+      operationId: getAdminSummary
+      tags: [admin]
+      summary: Get database-backed administrator dashboard statistics
+      responses:
+        "200":
+          description: Assessment summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminSummary"
+  /admin/assessments:
+    get:
+      operationId: listAdminAssessments
+      tags: [admin]
+      summary: List all company assessments for review
+      parameters:
+        - name: reviewStatus
+          in: query
+          schema:
+            $ref: "#/components/schemas/ReviewStatus"
+        - name: csrApplicable
+          in: query
+          schema:
+            type: boolean
+        - name: financialYear
+          in: query
+          schema:
+            type: string
+            pattern: "^[0-9]{4}-[0-9]{2}$"
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Assessments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminAssessment"
+  /admin/assessments/{id}:
+    get:
+      operationId: getAdminAssessment
+      tags: [admin]
+      summary: Get a company assessment and review history
+      parameters:
+        - $ref: "#/components/parameters/AssessmentId"
+      responses:
+        "200":
+          description: Assessment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAssessment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /admin/assessments/{id}/review:
     patch:
-      operationId: decideApplication
-      tags: [applications]
-      summary: Approve or reject an application
+      operationId: reviewAssessment
+      tags: [admin]
+      summary: Update the independent administrator review status
+      parameters:
+        - $ref: "#/components/parameters/AssessmentId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewAssessmentInput"
+      responses:
+        "200":
+          description: Updated assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAssessment"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /support/messages:
+    get:
+      operationId: listSupportMessages
+      tags: [support]
+      summary: List the authenticated user's support messages
+      responses:
+        "200":
+          description: Support messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupportMessage"
+    post:
+      operationId: createSupportMessage
+      tags: [support]
+      summary: Submit a support message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupportMessageInput"
+      responses:
+        "201":
+          description: Support message created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupportMessage"
+  /admin/support/messages:
+    get:
+      operationId: listAdminSupportMessages
+      tags: [admin]
+      summary: List all support messages for administrators
+      responses:
+        "200":
+          description: Support messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AdminSupportMessage"
+  /admin/support/messages/{id}:
+    patch:
+      operationId: updateSupportMessage
+      tags: [admin]
+      summary: Update a support message status and response
       parameters:
         - name: id
           in: path
@@ -132,185 +237,338 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DecisionInput"
+              $ref: "#/components/schemas/SupportMessageUpdate"
       responses:
         "200":
-          description: Updated application
+          description: Updated support message
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Application"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+                $ref: "#/components/schemas/AdminSupportMessage"
 components:
+  parameters:
+    AssessmentId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
   schemas:
     HealthStatus:
       type: object
       properties:
         status:
           type: string
-      required:
-        - status
-    Application:
+      required: [status]
+    ReviewStatus:
+      type: string
+      enum: [pending, approved, clarification, rejected]
+    CompanyType:
+      type: string
+      enum: [private_limited, public_limited, llp, section_8, other]
+    Assessment:
       type: object
       properties:
         id:
           type: integer
-        applicantName:
+        companyName:
           type: string
-        email:
+        cin:
           type: string
-        phone:
+        companyType:
+          $ref: "#/components/schemas/CompanyType"
+        financialYear:
           type: string
-        age:
-          type: ["integer", "null"]
-        cityDistrict:
+        registeredState:
           type: ["string", "null"]
-        state:
+        industry:
           type: ["string", "null"]
-        program:
-          type: string
-        region:
-          type: string
-        annualIncome:
+        netWorth:
+          type: number
+        turnover:
+          type: number
+        netProfit:
+          type: number
+        profitYear1:
           type: ["number", "null"]
-        householdSize:
-          type: integer
-        employmentStatus:
-          type: string
-        hasDisability:
+        profitYear2:
+          type: ["number", "null"]
+        profitYear3:
+          type: ["number", "null"]
+        averageProfit:
+          type: ["number", "null"]
+        indicativeCsrObligation:
+          type: ["number", "null"]
+        csrApplicable:
           type: boolean
-        requestedSupport:
+        applicabilityReason:
           type: string
-        reasonForApplying:
+        csrPolicyStatus:
           type: ["string", "null"]
-        additionalInformation:
+        governanceStatus:
           type: ["string", "null"]
-        notes:
+        annualActionPlanStatus:
           type: ["string", "null"]
-        eligibilityScore:
-          type: integer
-        eligibilityStatus:
-          type: string
-          enum: [eligible, review, not_eligible]
-        status:
-          type: string
-          enum: [pending, approved, rejected]
-        submittedAt:
+        implementingAgencyStatus:
+          type: ["string", "null"]
+        csrFocusAreas:
+          type: array
+          items:
+            type: string
+        additionalNotes:
+          type: ["string", "null"]
+        reviewStatus:
+          $ref: "#/components/schemas/ReviewStatus"
+        reviewNote:
+          type: ["string", "null"]
+        createdAt:
           type: string
           format: date-time
-        reviewedAt:
-          type: ["string", "null"]
-        reviewNote:
-          type: ["string", "null"]
+        updatedAt:
+          type: string
+          format: date-time
       required:
         - id
-        - applicantName
-        - email
-        - phone
-        - age
-        - cityDistrict
-        - state
-        - program
-        - region
-        - annualIncome
-        - householdSize
-        - employmentStatus
-        - hasDisability
-        - requestedSupport
-        - reasonForApplying
-        - additionalInformation
-        - notes
-        - eligibilityScore
-        - eligibilityStatus
-        - status
-        - submittedAt
-        - reviewedAt
+        - companyName
+        - cin
+        - companyType
+        - financialYear
+        - registeredState
+        - industry
+        - netWorth
+        - turnover
+        - netProfit
+        - profitYear1
+        - profitYear2
+        - profitYear3
+        - averageProfit
+        - indicativeCsrObligation
+        - csrApplicable
+        - applicabilityReason
+        - csrPolicyStatus
+        - governanceStatus
+        - annualActionPlanStatus
+        - implementingAgencyStatus
+        - csrFocusAreas
+        - additionalNotes
+        - reviewStatus
         - reviewNote
-    ApplicationInput:
+        - createdAt
+        - updatedAt
+    AdminAssessment:
+      allOf:
+        - $ref: "#/components/schemas/Assessment"
+        - type: object
+          properties:
+            userId:
+              type: string
+            adminNote:
+              type: ["string", "null"]
+            reviewHistory:
+              type: array
+              items:
+                $ref: "#/components/schemas/ReviewHistoryEntry"
+          required: [userId, adminNote, reviewHistory]
+    ReviewHistoryEntry:
       type: object
       properties:
-        applicantName:
-          type: string
-          minLength: 2
-        email:
-          type: string
-          format: email
-        phone:
-          type: string
-          minLength: 7
-        age:
+        id:
           type: integer
+        status:
+          $ref: "#/components/schemas/ReviewStatus"
+        note:
+          type: ["string", "null"]
+        adminNote:
+          type: ["string", "null"]
+        actorRole:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, status, note, adminNote, actorRole, createdAt]
+    AssessmentInput:
+      type: object
+      properties:
+        companyName:
+          type: string
+          minLength: 2
+          maxLength: 180
+        cin:
+          type: string
+          minLength: 2
+          maxLength: 40
+        companyType:
+          $ref: "#/components/schemas/CompanyType"
+        financialYear:
+          type: string
+          pattern: "^[0-9]{4}-[0-9]{2}$"
+        registeredState:
+          type: string
+          minLength: 2
+          maxLength: 80
+        industry:
+          type: string
+          minLength: 2
+          maxLength: 100
+        netWorth:
+          type: number
           minimum: 0
-          maximum: 120
-        cityDistrict:
+          maximum: 1000000000000
+        turnover:
+          type: number
+          minimum: 0
+          maximum: 1000000000000
+        netProfit:
+          type: number
+          minimum: 0
+          maximum: 1000000000000
+        profitYear1:
+          type: number
+          minimum: 0
+          maximum: 1000000000000
+        profitYear2:
+          type: number
+          minimum: 0
+          maximum: 1000000000000
+        profitYear3:
+          type: number
+          minimum: 0
+          maximum: 1000000000000
+        csrPolicyStatus:
           type: string
-          minLength: 2
-        state:
+          maxLength: 40
+        governanceStatus:
           type: string
-          minLength: 2
-        program:
+          maxLength: 40
+        annualActionPlanStatus:
           type: string
-          minLength: 2
-        employmentStatus:
+          maxLength: 40
+        implementingAgencyStatus:
           type: string
-          enum: [employed, self_employed, unemployed, student, retired]
-        reasonForApplying:
+          maxLength: 40
+        csrFocusAreas:
+          type: array
+          maxItems: 12
+          items:
+            type: string
+            maxLength: 80
+        additionalNotes:
           type: string
-        additionalInformation:
-          type: string
+          maxLength: 2000
       required:
-        - applicantName
-        - email
-        - phone
-        - age
-        - cityDistrict
-        - state
-        - program
-        - employmentStatus
-    DecisionInput:
+        - companyName
+        - cin
+        - companyType
+        - financialYear
+        - netWorth
+        - turnover
+        - netProfit
+    ReviewAssessmentInput:
       type: object
       properties:
         status:
-          type: string
-          enum: [approved, rejected]
+          $ref: "#/components/schemas/ReviewStatus"
         reviewNote:
           type: string
-      required:
-        - status
-    ApplicationSummary:
+          maxLength: 2000
+        adminNote:
+          type: string
+          maxLength: 2000
+      required: [status]
+    AdminSummary:
       type: object
       properties:
         total:
+          type: integer
+        applicable:
+          type: integer
+        notApplicable:
           type: integer
         pending:
           type: integer
         approved:
           type: integer
+        clarification:
+          type: integer
         rejected:
           type: integer
-        eligible:
-          type: integer
-        review:
-          type: integer
-        notEligible:
+        recent:
           type: integer
       required:
         - total
+        - applicable
+        - notApplicable
         - pending
         - approved
+        - clarification
         - rejected
-        - eligible
-        - review
-        - notEligible
+        - recent
+    SupportMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        status:
+          type: string
+          enum: [open, in_progress, resolved]
+        adminResponse:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, name, email, subject, message, status, adminResponse, createdAt, updatedAt]
+    AdminSupportMessage:
+      allOf:
+        - $ref: "#/components/schemas/SupportMessage"
+        - type: object
+          properties:
+            userId:
+              type: ["string", "null"]
+          required: [userId]
+    SupportMessageInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 120
+        email:
+          type: string
+          format: email
+        subject:
+          type: string
+          minLength: 2
+          maxLength: 180
+        message:
+          type: string
+          minLength: 10
+          maxLength: 4000
+      required: [name, email, subject, message]
+    SupportMessageUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [open, in_progress, resolved]
+        adminResponse:
+          type: string
+          maxLength: 4000
+      required: [status]
     Error:
       type: object
       properties:
         error:
           type: string
-      required:
-        - error
+      required: [error]

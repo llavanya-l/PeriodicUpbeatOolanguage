@@ -5,7 +5,9 @@
  * CivicPath company CSR assessment and compliance API
  * OpenAPI spec version: 0.2.0
  */
+import type { SupportMessage } from './supportMessage';
 
-export interface Error {
-  error: string;
-}
+export type AdminSupportMessage = SupportMessage & ({
+  /** @nullable */
+  userId: string | null;
+});

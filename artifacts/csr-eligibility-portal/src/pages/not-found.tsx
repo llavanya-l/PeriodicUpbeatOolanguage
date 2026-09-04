@@ -1,23 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle } from 'lucide-react';
-
-export default function NotFound() {
-  return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">
-              404 Page Not Found
-            </h1>
-          </div>
-
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+import { Link } from 'wouter';
+import { Mark } from '@/components/portal-shell';
+export default function NotFound() { return <div className="grid min-h-[100dvh] place-items-center bg-[hsl(var(--background))] px-5"><div className="max-w-md text-center"><Link href="/" data-testid="link-not-found-brand"><Mark /></Link><p className="mt-16 font-mono-app text-[10px] uppercase tracking-[.18em] text-[hsl(var(--accent-foreground)/.7)]">404 · Page not found</p><h1 className="mt-4 font-display text-6xl tracking-[-.06em] text-[hsl(var(--primary))]">A missing path.</h1><p className="mt-5 text-sm leading-6 text-[hsl(var(--muted-foreground))]">That page does not exist in CivicPath. Return to the landing page and choose a clear next step.</p><Link href="/" className="mt-8 inline-flex rounded-xl bg-[hsl(var(--primary))] px-5 py-3 text-sm font-semibold text-[hsl(var(--primary-foreground))]" data-testid="link-not-found-home">Back to CivicPath</Link></div></div>; }

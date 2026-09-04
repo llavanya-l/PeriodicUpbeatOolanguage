@@ -14,6 +14,11 @@ import Landing from '@/pages/landing';
 import NotFound from '@/pages/not-found';
 import ResultPage from '@/pages/result';
 import UserDashboard from '@/pages/user-dashboard';
+import RoadmapPage from '@/pages/roadmap';
+import SupportPage from '@/pages/support';
+import ProfilePage from '@/pages/profile';
+import AdminAssessmentPage from '@/pages/admin-assessment';
+import AdminSupportPage from '@/pages/admin-support';
 
 const queryClient = new QueryClient();
 const clerkPubKey = publishableKeyFromHost(
@@ -185,14 +190,29 @@ function Router() {
         <Route path="/user/dashboard">
           <UserGuard><UserDashboard /></UserGuard>
         </Route>
-        <Route path="/user/apply">
+        <Route path="/user/assess">
           <UserGuard><ApplyPage /></UserGuard>
         </Route>
-        <Route path="/user/result/:id">
+        <Route path="/user/assessment/:id">
           <UserGuard><ResultPage /></UserGuard>
+        </Route>
+        <Route path="/user/roadmap">
+          <UserGuard><RoadmapPage /></UserGuard>
+        </Route>
+        <Route path="/user/support">
+          <UserGuard><SupportPage /></UserGuard>
+        </Route>
+        <Route path="/user/profile">
+          <UserGuard><ProfilePage /></UserGuard>
         </Route>
         <Route path="/admin/dashboard">
           <AdminGuard><AdminDashboard /></AdminGuard>
+        </Route>
+        <Route path="/admin/assessment/:id">
+          <AdminGuard><AdminAssessmentPage /></AdminGuard>
+        </Route>
+        <Route path="/admin/support">
+          <AdminGuard><AdminSupportPage /></AdminGuard>
         </Route>
         <Route component={NotFound} />
       </Switch>
@@ -218,7 +238,7 @@ function ClerkProviderWithRoutes() {
         signUp: {
           start: {
             title: 'Create your CivicPath account',
-            subtitle: 'Start with a secure account to keep your application together.',
+            subtitle: 'Start with a secure account to keep your company assessments together.',
           },
         },
       }}
